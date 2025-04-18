@@ -1,5 +1,6 @@
 import * as React from "react";
 import axios from "axios";
+import "./App.scss";
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
@@ -48,19 +49,25 @@ const useStorageState = (key, initialState) => {
   return [value, setValue];
 };
 
-const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }) => {
+const SearchForm = ({ searchTerm, onSearchInput, searchAction }) => {
   return (
-    <form onSubmit={onSearchSubmit}>
+    <form onSubmit={searchAction} className="search-form">
       <InputWithLabel
         id="search"
         value={searchTerm}
         isFocused
         onInputChange={onSearchInput}
+        className="search-form__input"
+        labelClassName="search-form__label"
       >
         <strong>Search:</strong>
       </InputWithLabel>
 
-      <button type="submit" disabled={!searchTerm}>
+      <button
+        type="submit"
+        disabled={!searchTerm}
+        className="button button--large"
+      >
         Submit
       </button>
     </form>
@@ -106,31 +113,34 @@ const App = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearchSubmit = (event) => {
-    setUrl(`${API_ENDPOINT}${searchTerm}`);
-
+  const searchAction = (event) => {
     event.preventDefault();
+    setUrl(`${API_ENDPOINT}${searchTerm}`);
   };
 
   return (
-    <div>
-      <h1>My Hacker Stories</h1>
+    <div className="app">
+      <h1 className="app__headline">My Hacker Stories</h1>
 
       <SearchForm
         searchTerm={searchTerm}
         onSearchInput={handleSearchInput}
-        onSearchSubmit={handleSearchSubmit}
+        searchAction={searchAction}
       />
 
-      <hr />
-      
-      {stories.isError && <p>Something went wrong ...</p>}
+      <hr className="divider" />
 
-      {stories.isLoading ? (
-        <p>Loading ...</p>
-      ) : (
-        <List list={stories.data} onRemoveItem={handleRemoveStory} />
-      )}
+      <div className="stories">
+        {stories.isError && (
+          <p className="stories__error">Something went wrong ...</p>
+        )}
+
+        {stories.isLoading ? (
+          <p className="stories__loading">Loading ...</p>
+        ) : (
+          <List list={stories.data} onRemoveItem={handleRemoveStory} />
+        )}
+      </div>
     </div>
   );
 };
@@ -142,6 +152,8 @@ const InputWithLabel = ({
   onInputChange,
   isFocused,
   children,
+  className,
+  labelClassName,
 }) => {
   const inputRef = React.useRef();
 
@@ -153,7 +165,9 @@ const InputWithLabel = ({
 
   return (
     <>
-      <label htmlFor={id}>{children}</label>
+      <label htmlFor={id} className={labelClassName}>
+        {children}
+      </label>
       &nbsp;
       <input
         ref={inputRef}
@@ -161,13 +175,14 @@ const InputWithLabel = ({
         type={type}
         value={value}
         onChange={onInputChange}
+        className={className}
       />
     </>
   );
 };
 
 const List = ({ list, onRemoveItem }) => (
-  <ul>
+  <ul className="story-list">
     {list.map((item) => (
       <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
     ))}
@@ -175,15 +190,23 @@ const List = ({ list, onRemoveItem }) => (
 );
 
 const Item = ({ item, onRemoveItem }) => (
-  <li>
-    <span>
-      <a href={item.url}>{item.title}</a>
+  <li className="story">
+    <span className="story__column story__column--title">
+      <a href={item.url} className="story__link">
+        {item.title}
+      </a>
     </span>
-    <span>{item.author}</span>
-    <span>{item.num_comments}</span>
-    <span>{item.points}</span>
-    <span>
-      <button type="button" onClick={() => onRemoveItem(item)}>
+    <span className="story__column story__column--author">{item.author}</span>
+    <span className="story__column story__column--comments">
+      {item.num_comments}
+    </span>
+    <span className="story__column story__column--points">{item.points}</span>
+    <span className="story__column story__column--actions">
+      <button
+        type="button"
+        onClick={() => onRemoveItem(item)}
+        className="button button--small"
+      >
         Dismiss
       </button>
     </span>
