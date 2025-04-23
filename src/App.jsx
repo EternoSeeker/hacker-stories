@@ -1,7 +1,7 @@
 import * as React from "react";
 import axios from "axios";
 import "./App.scss";
-import Check from './assets/check.svg?react';
+import Check from "./assets/check.svg?react";
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
@@ -103,12 +103,12 @@ const App = () => {
     handleFetchStories();
   }, [handleFetchStories]);
 
-  const handleRemoveStory = (item) => {
+  const handleRemoveStory = React.useCallback((item) => {
     dispatchStories({
       type: "REMOVE_STORY",
       payload: item,
     });
-  };
+  }, []);
 
   const handleSearchInput = (event) => {
     setSearchTerm(event.target.value);
@@ -182,13 +182,13 @@ const InputWithLabel = ({
   );
 };
 
-const List = ({ list, onRemoveItem }) => (
+const List = React.memo(({ list, onRemoveItem }) => (
   <ul className="story-list">
     {list.map((item) => (
       <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
     ))}
   </ul>
-);
+));
 
 const Item = ({ item, onRemoveItem }) => (
   <li className="story">
@@ -208,10 +208,12 @@ const Item = ({ item, onRemoveItem }) => (
         onClick={() => onRemoveItem(item)}
         className="button button--small"
       >
-        <Check height="18px" width="18px"/>
+        <Check height="18px" width="18px" />
       </button>
     </span>
   </li>
 );
 
 export default App;
+
+export {storiesReducer, SearchForm, InputWithLabel, List, Item};
