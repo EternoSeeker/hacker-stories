@@ -191,7 +191,7 @@ const List = React.memo(({ list, onRemoveItem }) => (
 ));
 
 const Item = ({ item, onRemoveItem }) => (
-  <li className="story">
+  <li className="story" data-testid="story-item">
     <span className="story__column story__column--title">
       <a href={item.url} className="story__link">
         {item.title}
@@ -207,6 +207,7 @@ const Item = ({ item, onRemoveItem }) => (
         type="button"
         onClick={() => onRemoveItem(item)}
         className="button button--small"
+        data-testid="remove-button"
       >
         <Check height="18px" width="18px" />
       </button>
