@@ -1,42 +1,11 @@
 import * as React from "react";
 import axios from "axios";
 import "./App.scss";
-import Check from "./assets/check.svg?react";
+import {List} from "./components/list/List.jsx";
+import SearchForm from "./components/search-form/SearchForm.jsx";
+import storiesReducer from "./reducers/storiesReducer.js";
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
-
-const storiesReducer = (state, action) => {
-  switch (action.type) {
-    case "STORIES_FETCH_INIT":
-      return {
-        ...state,
-        isLoading: true,
-        isError: false,
-      };
-    case "STORIES_FETCH_SUCCESS":
-      return {
-        ...state,
-        isLoading: false,
-        isError: false,
-        data: action.payload,
-      };
-    case "STORIES_FETCH_FAILURE":
-      return {
-        ...state,
-        isLoading: false,
-        isError: true,
-      };
-    case "REMOVE_STORY":
-      return {
-        ...state,
-        data: state.data.filter(
-          (story) => action.payload.objectID !== story.objectID
-        ),
-      };
-    default:
-      throw new Error();
-  }
-};
 
 const useStorageState = (key, initialState) => {
   const [value, setValue] = React.useState(
@@ -48,31 +17,6 @@ const useStorageState = (key, initialState) => {
   }, [value, key]);
 
   return [value, setValue];
-};
-
-const SearchForm = ({ searchTerm, onSearchInput, searchAction }) => {
-  return (
-    <form onSubmit={searchAction} className="search-form">
-      <InputWithLabel
-        id="search"
-        value={searchTerm}
-        isFocused
-        onInputChange={onSearchInput}
-        className="search-form__input"
-        labelClassName="search-form__label"
-      >
-        <strong>Search:</strong>
-      </InputWithLabel>
-
-      <button
-        type="submit"
-        disabled={!searchTerm}
-        className="button button--large"
-      >
-        Submit
-      </button>
-    </form>
-  );
 };
 
 const App = () => {
@@ -146,75 +90,4 @@ const App = () => {
   );
 };
 
-const InputWithLabel = ({
-  id,
-  value,
-  type = "text",
-  onInputChange,
-  isFocused,
-  children,
-  className,
-  labelClassName,
-}) => {
-  const inputRef = React.useRef();
-
-  React.useEffect(() => {
-    if (isFocused && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isFocused]);
-
-  return (
-    <>
-      <label htmlFor={id} className={labelClassName}>
-        {children}
-      </label>
-      &nbsp;
-      <input
-        ref={inputRef}
-        id={id}
-        type={type}
-        value={value}
-        onChange={onInputChange}
-        className={className}
-      />
-    </>
-  );
-};
-
-const List = React.memo(({ list, onRemoveItem }) => (
-  <ul className="story-list">
-    {list.map((item) => (
-      <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
-    ))}
-  </ul>
-));
-
-const Item = ({ item, onRemoveItem }) => (
-  <li className="story" data-testid="story-item">
-    <span className="story__column story__column--title">
-      <a href={item.url} className="story__link">
-        {item.title}
-      </a>
-    </span>
-    <span className="story__column story__column--author">{item.author}</span>
-    <span className="story__column story__column--comments">
-      {item.num_comments}
-    </span>
-    <span className="story__column story__column--points">{item.points}</span>
-    <span className="story__column story__column--actions">
-      <button
-        type="button"
-        onClick={() => onRemoveItem(item)}
-        className="button button--small"
-        data-testid="remove-button"
-      >
-        <Check height="18px" width="18px" />
-      </button>
-    </span>
-  </li>
-);
-
 export default App;
-
-export {storiesReducer, SearchForm, InputWithLabel, List, Item};

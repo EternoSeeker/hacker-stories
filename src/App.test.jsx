@@ -3,13 +3,11 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import axios from "axios";
 vi.mock("axios");
 
-import App, {
-  storiesReducer,
-  Item,
-  List,
-  SearchForm,
-  InputWithLabel,
-} from "./App.jsx";
+import App from "./App.jsx";
+import storiesReducer from "./reducers/storiesReducer.js";
+import {List, Item} from './components/list/List.jsx';
+import SearchForm from "./components/search-form/SearchForm.jsx";
+import InputWithLabel from "./components/input-with-label/InputWithLabel.jsx";
 
 const storyOne = {
   title: "React",
