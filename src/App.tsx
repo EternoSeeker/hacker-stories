@@ -1,13 +1,14 @@
 import * as React from "react";
 import axios from "axios";
 import "./App.scss";
-import {List} from "./components/list/List.jsx";
-import SearchForm from "./components/search-form/SearchForm.jsx";
-import storiesReducer from "./reducers/storiesReducer.js";
+import {List} from "./components/list/List.tsx";
+import SearchForm from "./components/search-form/SearchForm.tsx";
+import storiesReducer from "./reducers/storiesReducer.ts";
+import { Story } from "./components/list/List.tsx";
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
-const useStorageState = (key, initialState) => {
+const useStorageState = (key: string, initialState: string) => {
   const [value, setValue] = React.useState(
     localStorage.getItem(key) || initialState
   );
@@ -16,7 +17,7 @@ const useStorageState = (key, initialState) => {
     localStorage.setItem(key, value);
   }, [value, key]);
 
-  return [value, setValue];
+  return [value, setValue] as const;
 };
 
 const App = () => {
@@ -47,18 +48,18 @@ const App = () => {
     handleFetchStories();
   }, [handleFetchStories]);
 
-  const handleRemoveStory = React.useCallback((item) => {
+  const handleRemoveStory = React.useCallback((item: Story) => {
     dispatchStories({
       type: "REMOVE_STORY",
       payload: item,
     });
   }, []);
 
-  const handleSearchInput = (event) => {
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  const searchAction = (event) => {
+  const searchAction = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setUrl(`${API_ENDPOINT}${searchTerm}`);
   };
@@ -70,7 +71,7 @@ const App = () => {
       <SearchForm
         searchTerm={searchTerm}
         onSearchInput={handleSearchInput}
-        searchAction={searchAction}
+        onSearchAction={searchAction}
       />
 
       <hr className="divider" />

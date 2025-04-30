@@ -1,8 +1,14 @@
-import InputWithLabel from "../input-with-label/InputWithLabel.jsx";
+import InputWithLabel from "../input-with-label/InputWithLabel.tsx";
 
-const SearchForm = ({ searchTerm, onSearchInput, searchAction }) => {
+type SearchFormProps = {
+  searchTerm: string;
+  onSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearchAction: (event: React.FormEvent<HTMLFormElement>) => void;
+}
+
+const SearchForm = ({ searchTerm, onSearchInput, onSearchAction }: SearchFormProps) => {
   return (
-    <form onSubmit={searchAction} className="search-form">
+    <form onSubmit={onSearchAction} className="search-form">
       <InputWithLabel
         id="search"
         value={searchTerm}

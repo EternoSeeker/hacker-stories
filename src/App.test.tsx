@@ -124,7 +124,7 @@ describe("SearchForm", () => {
   const searchFormProps = {
     searchTerm: "React",
     onSearchInput: vi.fn(),
-    searchAction: vi.fn(),
+    onSearchAction: vi.fn(),
   };
 
   it("renders the input field with its values", () => {
@@ -154,7 +154,7 @@ describe("SearchForm", () => {
 
     fireEvent.click(screen.getByRole("button"));
 
-    expect(searchFormProps.searchAction).toHaveBeenCalledTimes(1);
+    expect(searchFormProps.onSearchAction).toHaveBeenCalledTimes(1);
   });
 });
 

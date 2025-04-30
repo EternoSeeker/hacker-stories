@@ -1,7 +1,26 @@
-import * as React from 'react';
+import * as React from "react";
 import Check from "../../assets/check.svg?react";
 
-const List = React.memo(({ list, onRemoveItem }) => (
+type Story = {
+  objectID: string;
+  url: string;
+  title: string;
+  author: string;
+  num_comments: number;
+  points: number;
+};
+
+type ItemProps = {
+  item: Story;
+  onRemoveItem: (item: Story) => void;
+};
+
+type ListProps = {
+  list: Story[];
+  onRemoveItem: (item: Story) => void;
+};
+
+const List = React.memo(({ list, onRemoveItem }: ListProps) => (
   <ul className="story-list">
     {list.map((item) => (
       <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
@@ -9,7 +28,10 @@ const List = React.memo(({ list, onRemoveItem }) => (
   </ul>
 ));
 
-const Item = ({ item, onRemoveItem }) => (
+const Item = ({
+  item,
+  onRemoveItem,
+}: ItemProps) => (
   <li className="story" data-testid="story-item">
     <span className="story__column story__column--title">
       <a href={item.url} className="story__link">
@@ -34,4 +56,5 @@ const Item = ({ item, onRemoveItem }) => (
   </li>
 );
 
-export {List, Item};
+export { List, Item };
+export type {Story};
