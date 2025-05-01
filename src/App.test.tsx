@@ -1,38 +1,53 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import axios from "axios";
-vi.mock("axios");
 
 import App from "./App.jsx";
 import storiesReducer from "./reducers/storiesReducer.js";
-import {List, Item} from './components/list/List.jsx';
+import { List, Item } from "./components/list/List.jsx";
 import SearchForm from "./components/search-form/SearchForm.jsx";
 import InputWithLabel from "./components/input-with-label/InputWithLabel.jsx";
 
-const storyOne = {
+import { StoryType } from "./components/list/List.jsx";
+import {
+  StoriesStateType,
+  StoriesActionType,
+} from "./reducers/storiesReducer.js";
+
+vi.mock("axios");
+const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+const storyOne: StoryType = {
   title: "React",
   url: "https://react.dev/",
   author: "Jordan Walke",
   num_comments: 3,
   points: 4,
-  objectID: 0,
+  objectID: "0",
 };
 
-const storyTwo = {
+const storyTwo: StoryType = {
   title: "Redux",
   url: "https://redux.js.org/",
   author: "Dan Abramov, Andrew Clark",
   num_comments: 2,
   points: 5,
-  objectID: 1,
+  objectID: "1",
 };
 
-const stories = [storyOne, storyTwo];
+const stories: StoryType[] = [storyOne, storyTwo];
 
 describe("storiesReducer", () => {
   it("removes a story from all stories", () => {
-    const action = { type: "REMOVE_STORY", payload: storyOne };
-    const state = { data: stories, isLoading: false, isError: false };
+    const action: StoriesActionType = {
+      type: "REMOVE_STORY",
+      payload: storyOne,
+    };
+    const state: StoriesStateType = {
+      data: stories,
+      isLoading: false,
+      isError: false,
+    };
 
     const newState = storiesReducer(state, action);
 
@@ -46,8 +61,12 @@ describe("storiesReducer", () => {
   });
 
   it("start fetching stories", () => {
-    const action = { type: "STORIES_FETCH_INIT" };
-    const state = { data: stories, isLoading: false, isError: false };
+    const action: StoriesActionType = { type: "STORIES_FETCH_INIT" };
+    const state: StoriesStateType = {
+      data: stories,
+      isLoading: false,
+      isError: false,
+    };
 
     const newState = storiesReducer(state, action);
 
@@ -62,8 +81,15 @@ describe("storiesReducer", () => {
 
   it("successfully fetch the stories", () => {
     const newStories = stories;
-    const action = { type: "STORIES_FETCH_SUCCESS", payload: newStories };
-    const state = { data: [], isLoading: true, isError: false };
+    const action: StoriesActionType = {
+      type: "STORIES_FETCH_SUCCESS",
+      payload: newStories,
+    };
+    const state: StoriesStateType = {
+      data: [],
+      isLoading: true,
+      isError: false,
+    };
 
     const newState = storiesReducer(state, action);
 
@@ -77,8 +103,12 @@ describe("storiesReducer", () => {
   });
 
   it("failed to fetch the stories", () => {
-    const action = { type: "STORIES_FETCH_FAILURE" };
-    const state = { data: [], isLoading: true, isError: false };
+    const action: StoriesActionType = { type: "STORIES_FETCH_FAILURE" };
+    const state: StoriesStateType = {
+      data: [],
+      isLoading: true,
+      isError: false,
+    };
 
     const newState = storiesReducer(state, action);
 
@@ -93,8 +123,9 @@ describe("storiesReducer", () => {
 });
 
 describe("Item", () => {
+  const handleRemoveItem = vi.fn();
   it("renders all properties", () => {
-    render(<Item item={storyOne} />);
+    render(<Item item={storyOne} onRemoveItem={handleRemoveItem} />);
 
     expect(screen.getByText("Jordan Walke")).toBeInTheDocument();
     expect(screen.getByText("React")).toHaveAttribute(
@@ -104,14 +135,12 @@ describe("Item", () => {
   });
 
   it("renders a clickable dismiss button", () => {
-    render(<Item item={storyOne} />);
+    render(<Item item={storyOne} onRemoveItem={handleRemoveItem} />);
 
     expect(screen.getByRole("button")).toBeInTheDocument();
   });
 
   it("clicking the dismiss button calls the callback handler", () => {
-    const handleRemoveItem = vi.fn();
-
     render(<Item item={storyOne} onRemoveItem={handleRemoveItem} />);
 
     fireEvent.click(screen.getByRole("button"));
@@ -208,6 +237,11 @@ describe("InputWithLabel", () => {
 });
 
 describe("App", () => {
+  beforeEach(() => {
+    // Clear all mocks before each test
+    vi.clearAllMocks();
+  });
+
   it("succeeds fetching data", async () => {
     const promise = Promise.resolve({
       data: {
@@ -215,7 +249,7 @@ describe("App", () => {
       },
     });
 
-    axios.get.mockImplementationOnce(() => promise);
+    mockedAxios.get.mockImplementationOnce(() => promise);
 
     render(<App />);
 
@@ -234,7 +268,7 @@ describe("App", () => {
   it("fails fetching data", async () => {
     const promise = Promise.reject();
 
-    axios.get.mockImplementationOnce(() => promise);
+    mockedAxios.get.mockImplementationOnce(() => promise);
 
     render(<App />);
 
@@ -257,7 +291,7 @@ describe("App", () => {
       },
     });
 
-    axios.get.mockImplementationOnce(() => promise);
+    mockedAxios.get.mockImplementationOnce(() => promise);
 
     render(<App />);
 
@@ -296,7 +330,7 @@ describe("App", () => {
       },
     });
 
-    axios.get.mockImplementation((url) => {
+    mockedAxios.get.mockImplementation((url:string) => {
       if (url.includes("React")) {
         return reactPromise;
       }
@@ -324,7 +358,7 @@ describe("App", () => {
 
     // User Interaction -> Search
 
-    fireEvent.change(screen.queryByDisplayValue("React"), {
+    fireEvent.change(screen.getByDisplayValue("React"), {
       target: {
         value: "JavaScript",
       },
@@ -333,7 +367,7 @@ describe("App", () => {
     expect(screen.queryByDisplayValue("React")).toBeNull();
     expect(screen.queryByDisplayValue("JavaScript")).toBeInTheDocument();
 
-    fireEvent.click(screen.queryByText("Submit"));
+    fireEvent.click(screen.queryByText("Submit")!);
 
     // Second Data fetching
 

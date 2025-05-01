@@ -9,8 +9,9 @@
 
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "noEmit": true,
@@ -19,11 +20,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "allowImportingTsExtensions": true,
     "typeRoots": [
       "./node_modules/@types",
       "./src/types"
-    ]
+    ],
   },
   "include": ["src", "tests"],
   "exclude": ["dist", "node_modules"]

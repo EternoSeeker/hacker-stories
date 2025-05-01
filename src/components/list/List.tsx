@@ -1,7 +1,7 @@
 import * as React from "react";
 import Check from "../../assets/check.svg?react";
 
-type Story = {
+type StoryType = {
   objectID: string;
   url: string;
   title: string;
@@ -11,13 +11,13 @@ type Story = {
 };
 
 type ItemProps = {
-  item: Story;
-  onRemoveItem: (item: Story) => void;
+  item: StoryType;
+  onRemoveItem: (item: StoryType) => void;
 };
 
 type ListProps = {
-  list: Story[];
-  onRemoveItem: (item: Story) => void;
+  list: StoryType[];
+  onRemoveItem: (item: StoryType) => void;
 };
 
 const List = React.memo(({ list, onRemoveItem }: ListProps) => (
@@ -57,4 +57,4 @@ const Item = ({
 );
 
 export { List, Item };
-export type {Story};
+export type {StoryType};

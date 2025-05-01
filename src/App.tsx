@@ -4,7 +4,7 @@ import "./App.scss";
 import {List} from "./components/list/List.tsx";
 import SearchForm from "./components/search-form/SearchForm.tsx";
 import storiesReducer from "./reducers/storiesReducer.ts";
-import { Story } from "./components/list/List.tsx";
+import { StoryType } from "./components/list/List.tsx";
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
@@ -48,7 +48,7 @@ const App = () => {
     handleFetchStories();
   }, [handleFetchStories]);
 
-  const handleRemoveStory = React.useCallback((item: Story) => {
+  const handleRemoveStory = React.useCallback((item: StoryType) => {
     dispatchStories({
       type: "REMOVE_STORY",
       payload: item,

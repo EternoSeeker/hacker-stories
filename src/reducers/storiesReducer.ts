@@ -1,7 +1,7 @@
-import { Story } from "../components/list/List.tsx";
+import { StoryType } from "../components/list/List.tsx";
 
-type StoriesState = {
-  data: Story[];
+type StoriesStateType = {
+  data: StoryType[];
   isLoading: boolean;
   isError: boolean;
 };
@@ -12,7 +12,7 @@ type StoriesFetchInitAction = {
 
 type StoriesFetchSuccessAction = {
   type: "STORIES_FETCH_SUCCESS";
-  payload: Story[];
+  payload: StoryType[];
 };
 
 type StoriesFetchFailureAction = {
@@ -21,16 +21,16 @@ type StoriesFetchFailureAction = {
 
 type StoriesRemoveAction = {
   type: "REMOVE_STORY";
-  payload: Story;
+  payload: StoryType;
 };
 
-type StoriesAction =
+type StoriesActionType =
   | StoriesFetchInitAction
   | StoriesFetchSuccessAction
   | StoriesFetchFailureAction
   | StoriesRemoveAction;
 
-const storiesReducer = (state: StoriesState, action: StoriesAction) => {
+const storiesReducer = (state: StoriesStateType, action: StoriesActionType) => {
   switch (action.type) {
     case "STORIES_FETCH_INIT":
       return {
@@ -64,3 +64,4 @@ const storiesReducer = (state: StoriesState, action: StoriesAction) => {
 };
 
 export default storiesReducer;
+export type {StoriesStateType, StoriesActionType};
