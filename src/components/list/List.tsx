@@ -1,5 +1,6 @@
 import * as React from "react";
 import Check from "../../assets/check.svg?react";
+import "./List.scss";
 
 type StoryType = {
   objectID: string;
@@ -22,6 +23,13 @@ type ListProps = {
 
 const List = React.memo(({ list, onRemoveItem }: ListProps) => (
   <ul className="story-list">
+    <li className="story-headers">
+      <span className="story-headers--title">Title</span>
+      <span className="story-headers--author">Author</span>
+      <span className="story-headers--comments">Comments</span>
+      <span className="story-headers--points">Points</span>
+      <span className="story-headers--actions">Actions</span>
+    </li>
     {list.map((item) => (
       <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
     ))}
@@ -57,4 +65,4 @@ const Item = ({
 );
 
 export { List, Item };
-export type {StoryType};
+export type { StoryType };
