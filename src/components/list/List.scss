@@ -1,3 +1,5 @@
+@use "sass:color";
+
 //Variables
 $primary-color: #2c3e50;
 $secondary-color: #3498db;
@@ -7,7 +9,7 @@ $error-color: #e74c3c;
 $success-color: #2ecc71;
 $border-radius: 4px;
 $box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-$transition: all 0.3s ease;
+$transition: all 0.2s ease;
 $mobile-breakpoint: 768px;
 
 // Stories container
@@ -33,6 +35,8 @@ $mobile-breakpoint: 768px;
   list-style: none;
   padding: 0;
   margin: 0;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
 }
 
 // Story headers
@@ -42,7 +46,13 @@ $mobile-breakpoint: 768px;
   padding: 15px 0;
   border-bottom: 2px solid #ddd;
   font-weight: bold;
-  color: #333;
+
+  background-color: rgba($secondary-color, 0.05);
+  border-top-left-radius: $border-radius;
+  border-top-right-radius: $border-radius;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 
   &--title {
     width: 40%;
@@ -79,7 +89,9 @@ $mobile-breakpoint: 768px;
   align-items: center;
   padding: 15px 0;
   border-bottom: 1px solid #eee;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.3s ease;
+  animation: fadeIn 0.4s ease-in-out;
+  opacity: 1;
 
   &:hover {
     background-color: rgba($secondary-color, 0.05);
@@ -87,6 +99,8 @@ $mobile-breakpoint: 768px;
 
   &:last-child {
     border-bottom: none;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
   }
 
   &__column {
@@ -139,15 +153,50 @@ $mobile-breakpoint: 768px;
   }
 }
 
-@media (max-width: $mobile-breakpoint){
-    
+// Buttons
+.button--header {
+  background: none;
+  border: none;
+  color: $primary-color;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: $border-radius;
+  transition: all 0.2 ease;
+  position: relative;
+  transition: $transition;
+
+  &:hover {
+    transform: translateY(0);
+    text-decoration: underline;
+    color: black;
+  }
+
+  &:active {
+    transform: translateY(2px);
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: $mobile-breakpoint) {
   .story-headers {
-    display: none; 
+    display: none;
   }
 
   .story {
     flex-wrap: wrap;
-    padding: 15px 0;
+    padding: 15px 10px;
 
     &__column {
       &--title {

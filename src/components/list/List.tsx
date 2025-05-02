@@ -1,6 +1,7 @@
 import * as React from "react";
 import Check from "../../assets/check.svg?react";
 import "./List.scss";
+import { sortBy } from "lodash";
 
 type StoryType = {
   objectID: string;
@@ -21,25 +22,76 @@ type ListProps = {
   onRemoveItem: (item: StoryType) => void;
 };
 
-const List = React.memo(({ list, onRemoveItem }: ListProps) => (
-  <ul className="story-list">
-    <li className="story-headers">
-      <span className="story-headers--title">Title</span>
-      <span className="story-headers--author">Author</span>
-      <span className="story-headers--comments">Comments</span>
-      <span className="story-headers--points">Points</span>
-      <span className="story-headers--actions">Actions</span>
-    </li>
-    {list.map((item) => (
-      <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
-    ))}
-  </ul>
-));
+type SortKeyType = "NONE" | "TITLE" | "AUTHOR" | "COMMENTS" | "POINT";
 
-const Item = ({
-  item,
-  onRemoveItem,
-}: ItemProps) => (
+const SORTS: Record<SortKeyType, (list: StoryType[]) => StoryType[]> = {
+  NONE: (list: StoryType[]) => list,
+  TITLE: (list: StoryType[]) => sortBy(list, "title"),
+  AUTHOR: (list: StoryType[]) => sortBy(list, "author"),
+  COMMENTS: (list: StoryType[]) => sortBy(list, "num_comments").reverse(),
+  POINT: (list: StoryType[]) => sortBy(list, "points").reverse(),
+};
+
+const List = React.memo(({ list, onRemoveItem }: ListProps) => {
+  const [sort, setSort] = React.useState<SortKeyType>("NONE");
+
+  const handleSort = (sortKey: SortKeyType) => {
+    setSort(sortKey);
+  };
+
+  const sortFunction = SORTS[sort];
+  const sortedList = sortFunction(list);
+
+  return (
+    <ul className="story-list">
+      <li className="story-headers">
+        <span className="story-headers--title">
+          <button
+            className="button--header"
+            type="button"
+            onClick={() => handleSort("TITLE")}
+          >
+            Title
+          </button>
+        </span>
+        <span className="story-headers--author">
+          <button
+            className="button--header"
+            type="button"
+            onClick={() => handleSort("AUTHOR")}
+          >
+            Author
+          </button>
+        </span>
+        <span className="story-headers--comments">
+          <button
+            className="button--header"
+            type="button"
+            onClick={() => handleSort("COMMENTS")}
+          >
+            Comments
+          </button>
+        </span>
+        <span className="story-headers--points">
+          <button
+            className="button--header"
+            type="button"
+            onClick={() => handleSort("POINT")}
+          >
+            Points
+          </button>
+        </span>
+        <span className="story-headers--actions"></span>
+      </li>
+
+      {sortedList.map((item) => (
+        <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
+      ))}
+    </ul>
+  );
+});
+
+const Item = ({ item, onRemoveItem }: ItemProps) => (
   <li className="story" data-testid="story-item">
     <span className="story__column story__column--title">
       <a href={item.url} className="story__link">
