@@ -88,6 +88,9 @@ body {
 
 // Buttons
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background-color: $secondary-color;
   color: white;
   border: none;
@@ -111,13 +114,13 @@ body {
   }
 
   &--large {
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 10px 15px;
+    font-size: medium;
   }
 
   &--small {
-    padding: 5px 10px;
-    font-size: 14px;
+    padding: 8px 8px;
+    font-size: medium;
   }
 }
 

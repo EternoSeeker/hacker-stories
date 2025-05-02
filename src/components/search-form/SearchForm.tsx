@@ -1,4 +1,5 @@
 import InputWithLabel from "../input-with-label/InputWithLabel.tsx";
+import "./SearchForm.scss";
 
 type SearchFormProps = {
   searchTerm: string;
@@ -25,7 +26,7 @@ const SearchForm = ({ searchTerm, onSearchInput, onSearchAction }: SearchFormPro
         disabled={!searchTerm}
         className="button button--large"
       >
-        Submit
+        <span className="material-symbols-outlined">search</span>
       </button>
     </form>
   );
