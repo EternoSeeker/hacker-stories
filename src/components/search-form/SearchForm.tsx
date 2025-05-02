@@ -18,7 +18,7 @@ const SearchForm = ({ searchTerm, onSearchInput, onSearchAction }: SearchFormPro
         className="search-form__input"
         labelClassName="search-form__label"
       >
-        <strong>Search:</strong>
+        Search:
       </InputWithLabel>
 
       <button

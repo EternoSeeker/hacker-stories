@@ -12,31 +12,12 @@ $box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 $transition: all 0.2s ease;
 $mobile-breakpoint: 768px;
 
-// Stories container
-.stories {
-  &__error {
-    color: $error-color;
-    text-align: center;
-    padding: 20px;
-    background-color: rgba($error-color, 0.1);
-    border-radius: $border-radius;
-  }
-
-  &__loading {
-    text-align: center;
-    padding: 20px;
-    color: $primary-color;
-    font-style: italic;
-  }
-}
-
 // Story list
 .story-list {
   list-style: none;
-  padding: 0;
+  padding: 0.2rem;
   margin: 0;
   border-radius: $border-radius;
-  box-shadow: $box-shadow;
 }
 
 // Story headers
@@ -45,7 +26,6 @@ $mobile-breakpoint: 768px;
   align-items: center;
   padding: 15px 0;
   border-bottom: 2px solid #ddd;
-  font-weight: bold;
 
   background-color: rgba($secondary-color, 0.05);
   border-top-left-radius: $border-radius;
@@ -159,12 +139,13 @@ $mobile-breakpoint: 768px;
   border: none;
   color: $primary-color;
   cursor: pointer;
+  font-family: "Mona Sans", sans-serif;
+  font-optical-sizing: auto;
   font-weight: 600;
   font-size: 1rem;
   border-radius: $border-radius;
   transition: all 0.2 ease;
   position: relative;
-  transition: $transition;
 
   &:hover {
     transform: translateY(0);

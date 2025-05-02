@@ -7,7 +7,7 @@ $background-color: #f9f9f9;
 $text-color: #333;
 $error-color: #e74c3c;
 $success-color: #2ecc71;
-$border-radius: 4px;
+$border-radius: 0.3rem;
 $box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 $transition: all 0.3s ease;
 $mobile-breakpoint: 768px;
@@ -17,6 +17,7 @@ $mobile-breakpoint: 768px;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
@@ -38,18 +39,21 @@ body {
   box-shadow: $box-shadow;
 
   &__headline {
+    font-family: "Mona Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
     color: $primary-color;
-    margin-bottom: 20px;
-    font-size: 28px;
+    margin-bottom: 1.25rem;
+    font-size: 1.75rem;
     text-align: center;
   }
 }
 
 // Divider
 .divider {
-  margin: 30px 0;
+  margin: 1rem auto;
   border: 0;
-  height: 1px;
+  height: 2px;
   background-image: linear-gradient(
     to right,
     rgba(0, 0, 0, 0),
@@ -58,12 +62,30 @@ body {
   );
 }
 
+// Stories container
+.stories {
+  &__error {
+    color: $error-color;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba($error-color, 0.1);
+    border-radius: $border-radius;
+  }
+
+  &__loading {
+    text-align: center;
+    padding: 20px;
+    color: $primary-color;
+    font-style: italic;
+  }
+}
+
 // Search Form
 .search-form {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 
   &__label {
     color: $primary-color;
@@ -75,7 +97,7 @@ body {
     padding: 10px 15px;
     border: 1px solid #ddd;
     border-radius: $border-radius;
-    font-size: 16px;
+    font-size: 1rem;
     transition: $transition;
 
     &:focus {
