@@ -22,14 +22,14 @@ type ListProps = {
   onRemoveItem: (item: StoryType) => void;
 };
 
-type SortKeyType = "NONE" | "TITLE" | "AUTHOR" | "COMMENTS" | "POINT";
+type SortKeyType = "NONE" | "TITLE" | "AUTHOR" | "COMMENTS" | "POINTS";
 
 const SORTS: Record<SortKeyType, (list: StoryType[]) => StoryType[]> = {
   NONE: (list: StoryType[]) => list,
   TITLE: (list: StoryType[]) => sortBy(list, "title"),
   AUTHOR: (list: StoryType[]) => sortBy(list, "author"),
   COMMENTS: (list: StoryType[]) => sortBy(list, "num_comments").reverse(),
-  POINT: (list: StoryType[]) => sortBy(list, "points").reverse(),
+  POINTS: (list: StoryType[]) => sortBy(list, "points").reverse(),
 };
 
 const List = React.memo(({ list, onRemoveItem }: ListProps) => {
@@ -42,12 +42,16 @@ const List = React.memo(({ list, onRemoveItem }: ListProps) => {
   const sortFunction = SORTS[sort];
   const sortedList = sortFunction(list);
 
+  const currentActiveSort = (headerName: string) => {
+    return sort === headerName ? "header--current" : "";
+  };
+
   return (
     <ul className="story-list">
       <li className="story-headers">
         <span className="story-headers--title">
           <button
-            className="button--header"
+            className={`button--header ${currentActiveSort("TITLE")}`}
             type="button"
             onClick={() => handleSort("TITLE")}
           >
@@ -56,7 +60,7 @@ const List = React.memo(({ list, onRemoveItem }: ListProps) => {
         </span>
         <span className="story-headers--author">
           <button
-            className="button--header"
+            className={`button--header ${currentActiveSort("AUTHOR")}`}
             type="button"
             onClick={() => handleSort("AUTHOR")}
           >
@@ -65,7 +69,7 @@ const List = React.memo(({ list, onRemoveItem }: ListProps) => {
         </span>
         <span className="story-headers--comments">
           <button
-            className="button--header"
+            className={`button--header ${currentActiveSort("COMMENTS")}`}
             type="button"
             onClick={() => handleSort("COMMENTS")}
           >
@@ -74,9 +78,9 @@ const List = React.memo(({ list, onRemoveItem }: ListProps) => {
         </span>
         <span className="story-headers--points">
           <button
-            className="button--header"
+            className={`button--header ${currentActiveSort("POINTS")}`}
             type="button"
-            onClick={() => handleSort("POINT")}
+            onClick={() => handleSort("POINTS")}
           >
             Points
           </button>

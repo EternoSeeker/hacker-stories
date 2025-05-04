@@ -133,6 +133,10 @@ $mobile-breakpoint: 768px;
   }
 }
 
+.header--current{
+  text-decoration: underline;
+}
+
 // Buttons
 .button--header {
   background: none;
@@ -144,17 +148,17 @@ $mobile-breakpoint: 768px;
   font-weight: 600;
   font-size: 1rem;
   border-radius: $border-radius;
-  transition: all 0.2 ease;
+  transition: all 0.3s ease;
   position: relative;
 
   &:hover {
-    transform: translateY(0);
-    text-decoration: underline;
     color: black;
+    text-decoration: underline;
+    transform: translateY(0); 
   }
 
   &:active {
-    transform: translateY(2px);
+    transform: translateY(1.5px);
   }
 }
 
