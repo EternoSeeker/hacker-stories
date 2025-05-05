@@ -24,68 +24,87 @@ type ListProps = {
 
 type SortKeyType = "NONE" | "TITLE" | "AUTHOR" | "COMMENTS" | "POINTS";
 
+type SortStateType = {
+  sortKey: SortKeyType;
+  isReverse: boolean;
+};
+
+type SortHeaderProps = {
+  sortKey: SortKeyType;
+  activeSortKey: SortKeyType;
+  isReverse: boolean;
+  onSort: (sortKey: SortKeyType) => void;
+  children: React.ReactNode;
+};
+
 const SORTS: Record<SortKeyType, (list: StoryType[]) => StoryType[]> = {
   NONE: (list: StoryType[]) => list,
   TITLE: (list: StoryType[]) => sortBy(list, "title"),
   AUTHOR: (list: StoryType[]) => sortBy(list, "author"),
-  COMMENTS: (list: StoryType[]) => sortBy(list, "num_comments").reverse(),
-  POINTS: (list: StoryType[]) => sortBy(list, "points").reverse(),
+  COMMENTS: (list: StoryType[]) => sortBy(list, "num_comments"),
+  POINTS: (list: StoryType[]) => sortBy(list, "points"),
 };
 
 const List = React.memo(({ list, onRemoveItem }: ListProps) => {
-  const [sort, setSort] = React.useState<SortKeyType>("NONE");
+  const [sort, setSort] = React.useState<SortStateType>({
+    sortKey: "NONE",
+    isReverse: false,
+  });
 
   const handleSort = (sortKey: SortKeyType) => {
-    setSort(sortKey);
+    const isReverse = sort.sortKey === sortKey && !sort.isReverse;
+    setSort({ sortKey, isReverse });
   };
 
-  const sortFunction = SORTS[sort];
-  const sortedList = sortFunction(list);
-
-  const currentActiveSort = (headerName: string) => {
-    return sort === headerName ? "header--current" : "";
-  };
+  const sortFunction = SORTS[sort.sortKey];
+  const sortedList = sort.isReverse
+    ? sortFunction(list).reverse()
+    : sortFunction(list);
 
   return (
     <ul className="story-list">
       <li className="story-headers">
-        <span className="story-headers--title">
-          <button
-            className={`button--header ${currentActiveSort("TITLE")}`}
-            type="button"
-            onClick={() => handleSort("TITLE")}
+        <div className="story-header story-headers--title">
+          <Header
+            sortKey="TITLE"
+            activeSortKey={sort.sortKey}
+            isReverse={sort.isReverse}
+            onSort={handleSort}
           >
             Title
-          </button>
-        </span>
-        <span className="story-headers--author">
-          <button
-            className={`button--header ${currentActiveSort("AUTHOR")}`}
-            type="button"
-            onClick={() => handleSort("AUTHOR")}
+          </Header>
+        </div>
+        <div className="story-header story-headers--author">
+          <Header
+            sortKey="AUTHOR"
+            activeSortKey={sort.sortKey}
+            isReverse={sort.isReverse}
+            onSort={handleSort}
           >
             Author
-          </button>
-        </span>
-        <span className="story-headers--comments">
-          <button
-            className={`button--header ${currentActiveSort("COMMENTS")}`}
-            type="button"
-            onClick={() => handleSort("COMMENTS")}
+          </Header>
+        </div>
+        <div className="story-header story-headers--comments">
+          <Header
+            sortKey="COMMENTS"
+            activeSortKey={sort.sortKey}
+            isReverse={sort.isReverse}
+            onSort={handleSort}
           >
             Comments
-          </button>
-        </span>
-        <span className="story-headers--points">
-          <button
-            className={`button--header ${currentActiveSort("POINTS")}`}
-            type="button"
-            onClick={() => handleSort("POINTS")}
+          </Header>
+        </div>
+        <div className="story-header story-headers--points">
+          <Header
+            sortKey="POINTS"
+            activeSortKey={sort.sortKey}
+            isReverse={sort.isReverse}
+            onSort={handleSort}
           >
             Points
-          </button>
-        </span>
-        <span className="story-headers--actions"></span>
+          </Header>
+        </div>
+        <div className="story-header story-headers--actions"></div>
       </li>
 
       {sortedList.map((item) => (
@@ -94,6 +113,39 @@ const List = React.memo(({ list, onRemoveItem }: ListProps) => {
     </ul>
   );
 });
+
+const Header = ({
+  sortKey,
+  activeSortKey,
+  isReverse,
+  onSort,
+  children,
+}: SortHeaderProps) => {
+  const isActive = sortKey === activeSortKey;
+  const headerClass = isActive ? "header--current" : null;
+
+  const getSortDirection = () => {
+    if (!isActive) return null;
+    return isReverse ? "arrow_drop_down" : "arrow_drop_up";
+  };
+
+  return (
+    <div className="header-content">
+      <button
+        className={`button--header ${headerClass}`}
+        type="button"
+        onClick={() => onSort(sortKey)}
+      >
+        {children}
+      </button>
+      {getSortDirection() && (
+        <span className="material-symbols-outlined sort-icon">
+          {getSortDirection()}
+        </span>
+      )}
+    </div>
+  );
+};
 
 const Item = ({ item, onRemoveItem }: ItemProps) => (
   <li className="story" data-testid="story-item">

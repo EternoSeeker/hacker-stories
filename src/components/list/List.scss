@@ -40,19 +40,20 @@ $mobile-breakpoint: 768px;
   }
 
   &--author {
-    width: 20%;
+    width: 17%;
+    text-align: center;
     padding: 0 10px;
   }
 
   &--comments {
-    width: 15%;
+    width: 18%;
     text-align: center;
     padding: 0 10px;
   }
 
   &--points {
     width: 15%;
-    text-align: center;
+    align-items: center;
     padding: 0 10px;
   }
 
@@ -63,15 +64,28 @@ $mobile-breakpoint: 768px;
   }
 }
 
+// Header content container for aligning button and icon
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Sort icon styling
+.sort-icon {
+  font-size: 20px;
+  margin-left: 4px;
+  color: $secondary-color;
+}
+
 // Story item
 .story {
   display: flex;
   align-items: center;
   padding: 15px 0;
   border-bottom: 1px solid #eee;
-  transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.3s ease;
+  transition: background-color 0.2s ease;
   animation: fadeIn 0.4s ease-in-out;
-  opacity: 1;
 
   &:hover {
     background-color: rgba($secondary-color, 0.05);
@@ -91,13 +105,14 @@ $mobile-breakpoint: 768px;
     }
 
     &--author {
-      width: 20%;
+      width: 17%;
+      text-align: center;
       padding: 0 10px;
       color: #666;
     }
 
     &--comments {
-      width: 15%;
+      width: 18%;
       text-align: center;
       padding: 0 10px;
       color: #666;
@@ -133,9 +148,6 @@ $mobile-breakpoint: 768px;
   }
 }
 
-.header--current{
-  text-decoration: underline;
-}
 
 // Buttons
 .button--header {
@@ -152,7 +164,7 @@ $mobile-breakpoint: 768px;
   position: relative;
 
   &:hover {
-    color: black;
+    color: color.adjust($primary-color, $lightness: -10%);
     text-decoration: underline;
     transform: translateY(0); 
   }
@@ -162,11 +174,17 @@ $mobile-breakpoint: 768px;
   }
 }
 
+.header--current{
+  text-decoration: underline;
+  font-weight: bold;
+  color: color.adjust($primary-color, $lightness: -10%);
+}
+
 // Animations
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(3px);
+    transform: translateY(0.4rem);
   }
   to {
     opacity: 1;
