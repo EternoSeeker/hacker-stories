@@ -23,7 +23,25 @@ const useStorageState = (key: string, initialState: string) => {
 const extractSearchTerm = (url: string) => url.replace(API_ENDPOINT, "");
 
 const getLastSearches = (urls: string[]) =>
-  urls.slice(-6).slice(0, -1).map((url) => extractSearchTerm(url)).reverse();
+  urls
+    .reduce((result: string[], url: string, index: number) => {
+      const searchTerm = extractSearchTerm(url);
+
+      if (index === 0) {
+        return result.concat(searchTerm);
+      }
+
+      const previousSearchTerm = result[result.length - 1];
+
+      if (searchTerm !== previousSearchTerm) {
+        return result.concat(searchTerm);
+      }
+      return result;
+    }, [])
+    .slice(-6)
+    .slice(0, -1)
+    .map((url) => extractSearchTerm(url))
+    .reverse();
 
 const getUrl = (searchTerm: string) => `${API_ENDPOINT}${searchTerm}`;
 
