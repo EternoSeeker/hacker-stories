@@ -3,6 +3,7 @@
 //Variables
 $primary-color: #2c3e50;
 $secondary-color: #3498db;
+$accent-color: #1abc9c;
 $background-color: #f9f9f9;
 $text-color: #333;
 $error-color: #e74c3c;
@@ -11,6 +12,20 @@ $border-radius: 0.3rem;
 $box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 $transition: all 0.3s ease;
 $mobile-breakpoint: 768px;
+$tablet-breakpoint: 1024px;
+
+// Mixins
+@mixin focus-ring {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba($secondary-color, 0.4);
+}
+
+@mixin card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: $box-shadow;
+  transition: $transition;
+}
 
 // Base styles
 * {
@@ -21,11 +36,9 @@ $mobile-breakpoint: 768px;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background-color: $background-color;
   color: $text-color;
-  line-height: 1.6;
+  line-height: 1.5;
   padding: 20px;
 }
 
@@ -33,10 +46,8 @@ body {
 .app {
   max-width: 800px;
   margin: 0 auto;
-  padding: 30px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: $box-shadow;
+  padding: 1.75rem;
+  @include card;
 
   &__headline {
     font-family: "Mona Sans", sans-serif;
@@ -46,6 +57,7 @@ body {
     margin-bottom: 1.25rem;
     font-size: 1.75rem;
     text-align: center;
+    position: relative;
   }
 }
 
@@ -57,7 +69,7 @@ body {
   background-image: linear-gradient(
     to right,
     rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0.1),
+    #11737861,
     rgba(0, 0, 0, 0)
   );
 }
@@ -67,16 +79,33 @@ body {
   &__error {
     color: $error-color;
     text-align: center;
-    padding: 20px;
+    padding: 1.25rem;
     background-color: rgba($error-color, 0.1);
     border-radius: $border-radius;
   }
 
   &__loading {
     text-align: center;
-    padding: 20px;
+    padding: 1.25rem;
     color: $primary-color;
     font-style: italic;
+
+    &::after {
+      content: ".";
+      animation: ellipsis 1.5s infinite;
+    }
+  }
+}
+
+@keyframes ellipsis {
+  0% {
+    content: ".";
+  }
+  33% {
+    content: "..";
+  }
+  66% {
+    content: "...";
   }
 }
 
@@ -94,16 +123,15 @@ body {
 
   &__input {
     flex: 1;
-    padding: 10px 15px;
+    padding: 0.7rem 1rem;
     border: 1px solid #ddd;
     border-radius: $border-radius;
     font-size: 1rem;
     transition: $transition;
 
     &:focus {
-      outline: none;
+      @include focus-ring;
       border-color: $secondary-color;
-      box-shadow: 0 0 0 2px rgba($secondary-color, 0.2);
     }
   }
 }
@@ -123,7 +151,8 @@ body {
 
   &:hover:not(:disabled) {
     background-color: color.adjust($secondary-color, $lightness: -10%);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   &:active:not(:disabled) {
@@ -136,21 +165,63 @@ body {
   }
 
   &--large {
-    padding: 10px 15px;
-    font-size: medium;
+    padding: 0.75rem 1.2rem;
+    font-size: 1rem;
   }
 
   &--small {
-    padding: 8px 8px;
-    font-size: medium;
+    padding: 0.5rem 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+.last-searches {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 0.3rem;
+  gap: 0.5rem;
+
+  @media (max-width: $mobile-breakpoint) {
+    padding: 0.2rem;
+  }
+}
+
+.last-searches__button {
+  @extend .button;
+  background-color: white;
+  color: $secondary-color;
+  border: 1px solid $secondary-color;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  border-radius: $border-radius;
+  transition: $transition;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background-color: $secondary-color;
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  &:focus {
+    @include focus-ring;
   }
 }
 
 // Responsive adjustments
 @media (max-width: $mobile-breakpoint) {
+  .app {
+    padding: 1.5rem;
+  }
+
   .search-form {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .app__headline {
+    font-size: 1.5rem;
   }
 }
-
