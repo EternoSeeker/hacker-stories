@@ -3,6 +3,7 @@ import axios from "axios";
 import "./App.scss";
 import { List } from "./components/list/List.tsx";
 import SearchForm from "./components/search-form/SearchForm.tsx";
+import LastSearches from "./components/last-searches/LastSearches.tsx";
 import storiesReducer from "./reducers/storiesReducer.ts";
 import { StoryType } from "./components/list/List.tsx";
 
@@ -112,18 +113,10 @@ const App = () => {
         onSearchAction={searchAction}
       />
 
-      <div className="last-searches">
-        {lastSearches.map((searchTerm: string, index: number) => (
-          <button
-            key={searchTerm + index}
-            type="button"
-            onClick={() => handleLastSearch(searchTerm)}
-            className="last-searches__button"
-          >
-            {searchTerm}
-          </button>
-        ))}
-      </div>
+      <LastSearches
+        lastSearches={lastSearches}
+        onLastSearch={handleLastSearch}
+      />
 
       <hr className="divider" />
 
