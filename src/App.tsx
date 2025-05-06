@@ -23,7 +23,7 @@ const useStorageState = (key: string, initialState: string) => {
 const extractSearchTerm = (url: string) => url.replace(API_ENDPOINT, "");
 
 const getLastSearches = (urls: string[]) =>
-  urls.slice(-5).map((url) => extractSearchTerm(url)).reverse();
+  urls.slice(-6).slice(0, -1).map((url) => extractSearchTerm(url)).reverse();
 
 const getUrl = (searchTerm: string) => `${API_ENDPOINT}${searchTerm}`;
 
