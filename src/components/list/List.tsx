@@ -23,7 +23,7 @@ type ListProps = {
   onRemoveItem: (item: StoryType) => void;
 };
 
-type SortKeyType = "NONE" | "TITLE" | "AUTHOR" | "COMMENTS" | "POINTS";
+type SortKeyType = "None" | "Title" | "Author" | "Comments" | "Points";
 
 type SortStateType = {
   sortKey: SortKeyType;
@@ -31,16 +31,16 @@ type SortStateType = {
 };
 
 const SORTS: Record<SortKeyType, (list: StoryType[]) => StoryType[]> = {
-  NONE: (list: StoryType[]) => list,
-  TITLE: (list: StoryType[]) => sortBy(list, "title"),
-  AUTHOR: (list: StoryType[]) => sortBy(list, "author"),
-  COMMENTS: (list: StoryType[]) => sortBy(list, "num_comments"),
-  POINTS: (list: StoryType[]) => sortBy(list, "points"),
+  None: (list: StoryType[]) => list,
+  Title: (list: StoryType[]) => sortBy(list, "title"),
+  Author: (list: StoryType[]) => sortBy(list, "author"),
+  Comments: (list: StoryType[]) => sortBy(list, "num_comments"),
+  Points: (list: StoryType[]) => sortBy(list, "points"),
 };
 
 const List = React.memo(({ list, onRemoveItem }: ListProps) => {
   const [sort, setSort] = React.useState<SortStateType>({
-    sortKey: "NONE",
+    sortKey: "None",
     isReverse: false,
   });
 
@@ -57,46 +57,19 @@ const List = React.memo(({ list, onRemoveItem }: ListProps) => {
   return (
     <ul className="story-list">
       <li className="story-headers">
-        <div className="story-header story-headers--title">
-          <ListHeader
-            sortKey="TITLE"
-            activeSortKey={sort.sortKey}
-            isReverse={sort.isReverse}
-            onSort={handleSort}
-          >
-            Title
-          </ListHeader>
-        </div>
-        <div className="story-header story-headers--author">
-          <ListHeader
-            sortKey="AUTHOR"
-            activeSortKey={sort.sortKey}
-            isReverse={sort.isReverse}
-            onSort={handleSort}
-          >
-            Author
-          </ListHeader>
-        </div>
-        <div className="story-header story-headers--comments">
-          <ListHeader
-            sortKey="COMMENTS"
-            activeSortKey={sort.sortKey}
-            isReverse={sort.isReverse}
-            onSort={handleSort}
-          >
-            Comments
-          </ListHeader>
-        </div>
-        <div className="story-header story-headers--points">
-          <ListHeader
-            sortKey="POINTS"
-            activeSortKey={sort.sortKey}
-            isReverse={sort.isReverse}
-            onSort={handleSort}
-          >
-            Points
-          </ListHeader>
-        </div>
+        {Object.keys(SORTS)
+          .slice(1)
+          .map((headerName) => (
+            <ListHeader
+              key={headerName}
+              headerName={headerName as SortKeyType}
+              activeSortKey={sort.sortKey}
+              isReverse={sort.isReverse}
+              onSort={handleSort}
+            >
+              {headerName}
+            </ListHeader>
+          ))}
         <div className="story-header story-headers--actions"></div>
       </li>
 

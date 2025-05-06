@@ -1,43 +1,40 @@
 import { SortKeyType } from "../list/List.tsx";
 
 type ListHeaderProps = {
-  sortKey: SortKeyType;
+  headerName: SortKeyType;
   activeSortKey: SortKeyType;
   isReverse: boolean;
   onSort: (sortKey: SortKeyType) => void;
   children: React.ReactNode;
 };
 
-
 const ListHeader = ({
-  sortKey,
+  headerName,
   activeSortKey,
   isReverse,
   onSort,
   children,
 }: ListHeaderProps) => {
-  const isActive = sortKey === activeSortKey;
+  const isActive = headerName === activeSortKey;
   const headerClass = isActive ? "header--current" : null;
-
-  const getSortDirection = () => {
-    if (!isActive) return null;
-    return isReverse ? "arrow_drop_down" : "arrow_drop_up";
-  };
+  const getSortDirection = isReverse ? "arrow_drop_down" : "arrow_drop_up";
 
   return (
-    <div className="header-content">
-      <button
-        className={`button--header ${headerClass}`}
-        type="button"
-        onClick={() => onSort(sortKey)}
-      >
-        {children}
-      </button>
-      {getSortDirection() && (
-        <span className="material-symbols-outlined sort-icon">
-          {getSortDirection()}
-        </span>
-      )}
+    <div className={`story-header story-headers--${headerName.toLowerCase()}`}>
+      <div className="header-content">
+        <button
+          className={`button--header ${headerClass}`}
+          type="button"
+          onClick={() => onSort(headerName)}
+        >
+          {children}
+        </button>
+        {isActive && (
+          <span className="material-symbols-outlined sort-icon">
+            {getSortDirection}
+          </span>
+        )}
+      </div>
     </div>
   );
 };
