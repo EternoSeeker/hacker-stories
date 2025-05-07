@@ -2,6 +2,7 @@ import { StoryType } from "../components/list/List.tsx";
 
 type StoriesStateType = {
   data: StoryType[];
+  page: number;
   isLoading: boolean;
   isError: boolean;
 };
@@ -12,7 +13,10 @@ type StoriesFetchInitAction = {
 
 type StoriesFetchSuccessAction = {
   type: "STORIES_FETCH_SUCCESS";
-  payload: StoryType[];
+  payload: {
+    list: StoryType[];
+    page: number;
+  };
 };
 
 type StoriesFetchFailureAction = {
@@ -43,7 +47,11 @@ const storiesReducer = (state: StoriesStateType, action: StoriesActionType) => {
         ...state,
         isLoading: false,
         isError: false,
-        data: action.payload,
+        data:
+          action.payload.page === 0
+            ? action.payload.list
+            : state.data.concat(action.payload.list),
+        page: action.payload.page,
       };
     case "STORIES_FETCH_FAILURE":
       return {
@@ -64,4 +72,4 @@ const storiesReducer = (state: StoriesStateType, action: StoriesActionType) => {
 };
 
 export default storiesReducer;
-export type {StoriesStateType, StoriesActionType};
+export type { StoriesStateType, StoriesActionType };

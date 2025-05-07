@@ -7,21 +7,18 @@ import LastSearches from "./components/last-searches/LastSearches.tsx";
 import storiesReducer from "./reducers/storiesReducer.ts";
 import { StoryType } from "./components/list/List.tsx";
 
-const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
+const API_BASE = "https://hn.algolia.com/api/v1";
+const API_SEARCH = "/search";
+const PARAM_SEARCH = "query=";
+const PARAM_PAGE = "page=";
 
-const useStorageState = (key: string, initialState: string) => {
-  const [value, setValue] = React.useState(
-    localStorage.getItem(key) || initialState
-  );
+const getUrl = (searchTerm: string, page: number) =>
+  `${API_BASE}${API_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}`;
 
-  React.useEffect(() => {
-    localStorage.setItem(key, value);
-  }, [value, key]);
-
-  return [value, setValue] as const;
-};
-
-const extractSearchTerm = (url: string) => url.replace(API_ENDPOINT, "");
+const extractSearchTerm = (url: string) =>
+  url
+    .substring(url.lastIndexOf("?") + 1, url.lastIndexOf("&"))
+    .replace(PARAM_SEARCH, "");
 
 const getLastSearches = (urls: string[]) =>
   urls
@@ -41,17 +38,27 @@ const getLastSearches = (urls: string[]) =>
     }, [])
     .slice(-6)
     .slice(0, -1)
-    .map((url) => extractSearchTerm(url))
     .reverse();
 
-const getUrl = (searchTerm: string) => `${API_ENDPOINT}${searchTerm}`;
+const useStorageState = (key: string, initialState: string) => {
+  const [value, setValue] = React.useState(
+    localStorage.getItem(key) || initialState
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [value, key]);
+
+  return [value, setValue] as const;
+};
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useStorageState("search", "React");
-  const [urls, setUrls] = React.useState([getUrl(searchTerm)]);
+  const [urls, setUrls] = React.useState([getUrl(searchTerm, 0)]);
 
   const [stories, dispatchStories] = React.useReducer(storiesReducer, {
     data: [],
+    page: 0,
     isLoading: false,
     isError: false,
   });
@@ -64,7 +71,10 @@ const App = () => {
 
       dispatchStories({
         type: "STORIES_FETCH_SUCCESS",
-        payload: result.data.hits,
+        payload: {
+          list: result.data.hits,
+          page: result.data.page,
+        },
       });
     } catch {
       dispatchStories({ type: "STORIES_FETCH_FAILURE" });
@@ -86,19 +96,25 @@ const App = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearch = (searchTerm: string) => {
-    const url = getUrl(searchTerm);
+  const handleSearch = (searchTerm: string, page: number) => {
+    const url = getUrl(searchTerm, page);
     setUrls(urls.concat(url));
   };
 
   const searchAction = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    handleSearch(searchTerm);
+    handleSearch(searchTerm, 0);
   };
 
   const handleLastSearch = (searchTerm: string) => {
     setSearchTerm(searchTerm);
-    handleSearch(searchTerm);
+    handleSearch(searchTerm, 0);
+  };
+
+  const handleMore = () => {
+    const lastUrl = urls[urls.length - 1];
+    const searchTerm = extractSearchTerm(lastUrl);
+    handleSearch(searchTerm, stories.page + 1);
   };
 
   const lastSearches = getLastSearches(urls);
@@ -125,10 +141,16 @@ const App = () => {
           <p className="stories__error">Something went wrong ...</p>
         )}
 
+        <List list={stories.data} onRemoveItem={handleRemoveStory} />
+
         {stories.isLoading ? (
           <p className="stories__loading">Loading .</p>
         ) : (
-          <List list={stories.data} onRemoveItem={handleRemoveStory} />
+          <div className="more-button--container">
+            <button type="button" className="more__button" onClick={handleMore}>
+              More
+            </button>
+          </div>
         )}
       </div>
     </div>

@@ -3,6 +3,7 @@
 //Variables
 $primary-color: #2c3e50;
 $secondary-color: #3498db;
+$accent-color: #1abc9c;
 $background-color: #f9f9f9;
 $text-color: #333;
 $error-color: #e74c3c;
@@ -25,9 +26,9 @@ $mobile-breakpoint: 768px;
   display: flex;
   align-items: center;
   padding: 15px 0;
-  border-bottom: 2px solid #ddd;
+  border-bottom: 2px solid #cccccc;
 
-  background-color: rgba($secondary-color, 0.05);
+  background-color: rgba($secondary-color, 0.15);
   border-top-left-radius: $border-radius;
   border-top-right-radius: $border-radius;
   position: sticky;
