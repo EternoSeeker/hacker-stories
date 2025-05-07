@@ -8,8 +8,7 @@ $background-color: #f9f9f9;
 $text-color: #333;
 $error-color: #e74c3c;
 $success-color: #2ecc71;
-$border-radius: 4px;
-$box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+$border-radius: 0.3rem;
 $transition: all 0.2s ease;
 $mobile-breakpoint: 768px;
 
@@ -76,7 +75,7 @@ $mobile-breakpoint: 768px;
 .sort-icon {
   font-size: 20px;
   margin-left: 4px;
-  color: $secondary-color;
+  color: color.adjust($secondary-color, $lightness: -20%);
 }
 
 // Story item
