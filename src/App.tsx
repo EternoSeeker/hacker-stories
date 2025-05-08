@@ -1,10 +1,18 @@
-import * as React from "react";
+import { useState, useEffect, useCallback, useReducer } from "react";
 import axios from "axios";
+
 import "./App.scss";
+
 import { List } from "./components/list/List.tsx";
 import SearchForm from "./components/search-form/SearchForm.tsx";
 import LastSearches from "./components/last-searches/LastSearches.tsx";
 import storiesReducer from "./reducers/storiesReducer.ts";
+
+//hooks
+import useStorageState from "./hooks/useStorageState.ts";
+import useInfiniteScroll from "./hooks/useInfiniteScroll.ts";
+
+//types
 import { StoryType } from "./components/list/List.tsx";
 
 const API_BASE = "https://hn.algolia.com/api/v1";
@@ -40,30 +48,18 @@ const getLastSearches = (urls: string[]) =>
     .slice(0, -1)
     .reverse();
 
-const useStorageState = (key: string, initialState: string) => {
-  const [value, setValue] = React.useState(
-    localStorage.getItem(key) || initialState
-  );
-
-  React.useEffect(() => {
-    localStorage.setItem(key, value);
-  }, [value, key]);
-
-  return [value, setValue] as const;
-};
-
 const App = () => {
   const [searchTerm, setSearchTerm] = useStorageState("search", "React");
-  const [urls, setUrls] = React.useState([getUrl(searchTerm, 0)]);
+  const [urls, setUrls] = useState([getUrl(searchTerm, 0)]);
 
-  const [stories, dispatchStories] = React.useReducer(storiesReducer, {
+  const [stories, dispatchStories] = useReducer(storiesReducer, {
     data: [],
     page: 0,
     isLoading: false,
     isError: false,
   });
 
-  const handleFetchStories = React.useCallback(async () => {
+  const handleFetchStories = useCallback(async () => {
     dispatchStories({ type: "STORIES_FETCH_INIT" });
     try {
       const lastUrl = urls[urls.length - 1];
@@ -81,11 +77,11 @@ const App = () => {
     }
   }, [urls]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleFetchStories();
   }, [handleFetchStories]);
 
-  const handleRemoveStory = React.useCallback((item: StoryType) => {
+  const handleRemoveStory = useCallback((item: StoryType) => {
     dispatchStories({
       type: "REMOVE_STORY",
       payload: item,
@@ -111,13 +107,15 @@ const App = () => {
     handleSearch(searchTerm, 0);
   };
 
-  const handleMore = () => {
+  const lastSearches = getLastSearches(urls);
+
+  const handleMore = useCallback(() => {
     const lastUrl = urls[urls.length - 1];
     const searchTerm = extractSearchTerm(lastUrl);
     handleSearch(searchTerm, stories.page + 1);
-  };
+  }, [stories.page, urls]);
 
-  const lastSearches = getLastSearches(urls);
+  const bottomRef = useInfiniteScroll(handleMore, stories.isLoading);
 
   return (
     <div className="app">
@@ -143,15 +141,9 @@ const App = () => {
 
         <List list={stories.data} onRemoveItem={handleRemoveStory} />
 
-        {stories.isLoading ? (
-          <p className="stories__loading">Loading .</p>
-        ) : (
-          <div className="more-button--container">
-            <button type="button" className="more__button" onClick={handleMore}>
-              More
-            </button>
-          </div>
-        )}
+        {stories.isLoading && <p className="stories__loading">Loading .</p>}
+
+        <div ref={bottomRef} style={{ height: "1px" }} />
       </div>
     </div>
   );
