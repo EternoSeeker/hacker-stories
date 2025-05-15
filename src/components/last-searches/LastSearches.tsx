@@ -1,7 +1,7 @@
-type LastSearchesProps = {
+interface LastSearchesProps {
   lastSearches: string[];
   onLastSearch: (searchTerm: string) => void;
-};
+}
 
 const LastSearches = ({ lastSearches, onLastSearch }: LastSearchesProps) => {
   return (

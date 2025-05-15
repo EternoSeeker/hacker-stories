@@ -1,6 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 
-type InputWithLabelProps = {
+interface InputWithLabelProps {
   id: string;
   value: string;
   type?: string;

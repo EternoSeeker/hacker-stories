@@ -1,11 +1,11 @@
 import InputWithLabel from "../input-with-label/InputWithLabel.tsx";
 import "./SearchForm.scss";
 
-type SearchFormProps = {
+interface SearchFormProps {
   searchTerm: string;
   onSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onSearchAction: (event: React.FormEvent<HTMLFormElement>) => void;
-};
+}
 
 const SearchForm = ({
   searchTerm,

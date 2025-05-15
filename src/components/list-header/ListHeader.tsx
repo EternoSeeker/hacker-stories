@@ -1,12 +1,12 @@
 import { SortKeyType } from "../list/List.tsx";
 
-type ListHeaderProps = {
+interface ListHeaderProps {
   headerName: SortKeyType;
   activeSortKey: SortKeyType;
   isReverse: boolean;
   onSort: (sortKey: SortKeyType) => void;
   children: React.ReactNode;
-};
+}
 
 const ListHeader = ({
   headerName,

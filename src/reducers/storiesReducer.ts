@@ -1,32 +1,32 @@
 import { StoryType } from "../components/list/List.tsx";
 
-type StoriesStateType = {
+interface StoriesStateType {
   data: StoryType[];
   page: number;
   isLoading: boolean;
   isError: boolean;
-};
+}
 
-type StoriesFetchInitAction = {
+interface StoriesFetchInitAction {
   type: "STORIES_FETCH_INIT";
-};
+}
 
-type StoriesFetchSuccessAction = {
+interface StoriesFetchSuccessAction {
   type: "STORIES_FETCH_SUCCESS";
   payload: {
     list: StoryType[];
     page: number;
   };
-};
+}
 
-type StoriesFetchFailureAction = {
+interface StoriesFetchFailureAction {
   type: "STORIES_FETCH_FAILURE";
-};
+}
 
-type StoriesRemoveAction = {
+interface StoriesRemoveAction {
   type: "REMOVE_STORY";
   payload: StoryType;
-};
+}
 
 type StoriesActionType =
   | StoriesFetchInitAction

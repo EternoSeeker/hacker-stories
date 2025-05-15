@@ -4,31 +4,31 @@ import ListHeader from "../list-header/ListHeader.tsx";
 import "./List.scss";
 import { sortBy } from "lodash";
 
-type StoryType = {
+interface StoryType {
   objectID: string;
   url: string;
   title: string;
   author: string;
   num_comments: number;
   points: number;
-};
+}
 
-type ItemProps = {
+interface ItemProps {
   item: StoryType;
   onRemoveItem: (item: StoryType) => void;
-};
+}
 
-type ListProps = {
+interface ListProps {
   list: StoryType[];
   onRemoveItem: (item: StoryType) => void;
-};
+}
 
 type SortKeyType = "None" | "Title" | "Author" | "Comments" | "Points";
 
-type SortStateType = {
+interface SortStateType {
   sortKey: SortKeyType;
   isReverse: boolean;
-};
+}
 
 const SORTS: Record<SortKeyType, (list: StoryType[]) => StoryType[]> = {
   None: (list: StoryType[]) => list,
