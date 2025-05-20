@@ -8,16 +8,14 @@ import { List, Item } from "./components/list/List.jsx";
 import SearchForm from "./components/search-form/SearchForm.jsx";
 import InputWithLabel from "./components/input-with-label/InputWithLabel.jsx";
 
-import { StoryType } from "./components/list/List.jsx";
-import {
-  StoriesStateType,
-  StoriesActionType,
-} from "./reducers/storiesReducer.js";
+// Import types
+import { Story } from "./components/list/List.jsx";
+import { StoriesState, StoriesAction } from "./reducers/storiesReducer.js";
 
 vi.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-const storyOne: StoryType = {
+const storyOne: Story = {
   title: "React",
   url: "https://react.dev/",
   author: "Jordan Walke",
@@ -26,7 +24,7 @@ const storyOne: StoryType = {
   objectID: "0",
 };
 
-const storyTwo: StoryType = {
+const storyTwo: Story = {
   title: "Redux",
   url: "https://redux.js.org/",
   author: "Dan Abramov, Andrew Clark",
@@ -35,15 +33,15 @@ const storyTwo: StoryType = {
   objectID: "1",
 };
 
-const stories: StoryType[] = [storyOne, storyTwo];
+const stories: Story[] = [storyOne, storyTwo];
 
 describe("storiesReducer", () => {
   it("removes a story from all stories", () => {
-    const action: StoriesActionType = {
+    const action: StoriesAction = {
       type: "REMOVE_STORY",
       payload: storyOne,
     };
-    const state: StoriesStateType = {
+    const state: StoriesState = {
       data: stories,
       isLoading: false,
       isError: false,
@@ -61,8 +59,8 @@ describe("storiesReducer", () => {
   });
 
   it("start fetching stories", () => {
-    const action: StoriesActionType = { type: "STORIES_FETCH_INIT" };
-    const state: StoriesStateType = {
+    const action: StoriesAction = { type: "STORIES_FETCH_INIT" };
+    const state: StoriesState = {
       data: stories,
       isLoading: false,
       isError: false,
@@ -81,11 +79,11 @@ describe("storiesReducer", () => {
 
   it("successfully fetch the stories", () => {
     const newStories = stories;
-    const action: StoriesActionType = {
+    const action: StoriesAction = {
       type: "STORIES_FETCH_SUCCESS",
       payload: newStories,
     };
-    const state: StoriesStateType = {
+    const state: StoriesState = {
       data: [],
       isLoading: true,
       isError: false,
@@ -103,8 +101,8 @@ describe("storiesReducer", () => {
   });
 
   it("failed to fetch the stories", () => {
-    const action: StoriesActionType = { type: "STORIES_FETCH_FAILURE" };
-    const state: StoriesStateType = {
+    const action: StoriesAction = { type: "STORIES_FETCH_FAILURE" };
+    const state: StoriesState = {
       data: [],
       isLoading: true,
       isError: false,
@@ -330,7 +328,7 @@ describe("App", () => {
       },
     });
 
-    mockedAxios.get.mockImplementation((url:string) => {
+    mockedAxios.get.mockImplementation((url: string) => {
       if (url.includes("React")) {
         return reactPromise;
       }

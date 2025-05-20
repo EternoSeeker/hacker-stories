@@ -1,10 +1,10 @@
-import * as React from "react";
+import { useState, memo } from "react";
 import Check from "../../assets/check.svg?react";
 import ListHeader from "../list-header/ListHeader.tsx";
 import "./List.scss";
 import { sortBy } from "lodash";
 
-interface StoryType {
+interface Story {
   objectID: string;
   url: string;
   title: string;
@@ -14,37 +14,37 @@ interface StoryType {
 }
 
 interface ItemProps {
-  item: StoryType;
-  onRemoveItem: (item: StoryType) => void;
+  item: Story;
+  onRemoveItem: (item: Story) => void;
 }
 
 interface ListProps {
-  list: StoryType[];
-  onRemoveItem: (item: StoryType) => void;
+  list: Story[];
+  onRemoveItem: (item: Story) => void;
 }
 
-type SortKeyType = "None" | "Title" | "Author" | "Comments" | "Points";
+type SortKey = "None" | "Title" | "Author" | "Comments" | "Points";
 
-interface SortStateType {
-  sortKey: SortKeyType;
+interface SortState {
+  sortKey: SortKey;
   isReverse: boolean;
 }
 
-const SORTS: Record<SortKeyType, (list: StoryType[]) => StoryType[]> = {
-  None: (list: StoryType[]) => list,
-  Title: (list: StoryType[]) => sortBy(list, "title"),
-  Author: (list: StoryType[]) => sortBy(list, "author"),
-  Comments: (list: StoryType[]) => sortBy(list, "num_comments"),
-  Points: (list: StoryType[]) => sortBy(list, "points"),
+const SORTS: Record<SortKey, (list: Story[]) => Story[]> = {
+  None: (list: Story[]) => list,
+  Title: (list: Story[]) => sortBy(list, "title"),
+  Author: (list: Story[]) => sortBy(list, "author"),
+  Comments: (list: Story[]) => sortBy(list, "num_comments"),
+  Points: (list: Story[]) => sortBy(list, "points"),
 };
 
-const List = React.memo(({ list, onRemoveItem }: ListProps) => {
-  const [sort, setSort] = React.useState<SortStateType>({
+const List = memo(({ list, onRemoveItem }: ListProps) => {
+  const [sort, setSort] = useState<SortState>({
     sortKey: "None",
     isReverse: false,
   });
 
-  const handleSort = (sortKey: SortKeyType) => {
+  const handleSort = (sortKey: SortKey) => {
     const isReverse = sort.sortKey === sortKey && !sort.isReverse;
     setSort({ sortKey, isReverse });
   };
@@ -62,7 +62,7 @@ const List = React.memo(({ list, onRemoveItem }: ListProps) => {
           .map((headerName) => (
             <ListHeader
               key={headerName}
-              headerName={headerName as SortKeyType}
+              headerName={headerName as SortKey}
               activeSortKey={sort.sortKey}
               isReverse={sort.isReverse}
               onSort={handleSort}
@@ -106,4 +106,4 @@ const Item = ({ item, onRemoveItem }: ItemProps) => (
 );
 
 export { List, Item };
-export type { StoryType, SortKeyType };
+export type { Story, SortKey };

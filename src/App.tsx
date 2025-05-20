@@ -13,7 +13,7 @@ import useStorageState from "./hooks/useStorageState.ts";
 import useInfiniteScroll from "./hooks/useInfiniteScroll.ts";
 
 //types
-import { StoryType } from "./components/list/List.tsx";
+import { Story } from "./components/list/List.tsx";
 
 const API_BASE = "https://hn.algolia.com/api/v1";
 const API_SEARCH = "/search";
@@ -81,7 +81,7 @@ const App = () => {
     handleFetchStories();
   }, [handleFetchStories]);
 
-  const handleRemoveStory = useCallback((item: StoryType) => {
+  const handleRemoveStory = useCallback((item: Story) => {
     dispatchStories({
       type: "REMOVE_STORY",
       payload: item,

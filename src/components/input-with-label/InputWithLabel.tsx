@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useRef } from "react";
 
 interface InputWithLabelProps {
   id: string;
@@ -21,9 +21,9 @@ const InputWithLabel = ({
   className,
   labelClassName,
 }: InputWithLabelProps) => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isFocused && inputRef.current) {
       inputRef.current.focus();
     }
